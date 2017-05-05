@@ -1,0 +1,13 @@
+{
+  "name": "MineField",
+  "version": "1.0.0",
+  "main": "Gruntfile.js",
+  "license": "MIT",
+  "description": "A Minesweeper game",
+  "dependencies": {
+  },
+  "scripts": {
+    "start": "dotnet run /MineField.cs",
+    "mono": "mcs MineField.cs && mono MineField.exe"
+  }
+}
