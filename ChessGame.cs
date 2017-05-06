@@ -12,6 +12,7 @@ namespace ChessGame {
     public static string[] whitePieces = new string[16];
     public static string[] blackPieces = new string[16];
     public static int[] cursor = new int[2];
+    public static bool turn = false;
 
     // Main Structure
     static void Main(string[] args) {
@@ -29,22 +30,33 @@ namespace ChessGame {
       Console.SetCursorPosition(0, Console.WindowHeight - 1);
     }
 
-    public static bool isWhite(string piece) {
-      if (piece == "♙") return false;
-      if (piece == "♖") return false;
-      if (piece == "♘") return false;
-      if (piece == "♗") return false;
-      if (piece == "♕") return false;
-      if (piece == "♔") return false;
-
-      if (piece == "♟") return true;
-      if (piece == "♜") return true;
-      if (piece == "♞") return true;
-      if (piece == "♝") return true;
-      if (piece == "♛") return true;
-      if (piece == "♚") return true;
-
+    // Know IF Number Is In Board Limits
+    public static bool numberInBoard(int x, int y = 0) {
+      if (x >= 0 && x < 8) {
+        if (y >= 0 && y < 8) {
+          return true;
+        }
+      }
       return false;
+    }
+
+    // Known IF the String Is A White Piece
+    public static string isWhite(string piece) {
+      if (piece == "♙") return "false";
+      if (piece == "♖") return "false";
+      if (piece == "♘") return "false";
+      if (piece == "♗") return "false";
+      if (piece == "♕") return "false";
+      if (piece == "♔") return "false";
+
+      if (piece == "♟") return "true";
+      if (piece == "♜") return "true";
+      if (piece == "♞") return "true";
+      if (piece == "♝") return "true";
+      if (piece == "♛") return "true";
+      if (piece == "♚") return "true";
+
+      return "NaN";
     }
 
     // Obtain Piece String From X and Y in Matrix
@@ -52,26 +64,137 @@ namespace ChessGame {
       return board[y, x];
     }
 
+    // Create All Posible Movements
     public static int[,] getPosibleMoves(string piece, int x, int y) {
       int[,] moves = new int[1,1];
+      // Movements for Black Pawn
       if (piece == "♙") {
         moves = new int[4,2];
+        // Set Position of All Movents to -1. -1
+        for (var i = 0; i < moves.GetLength(0); i++) {
+          moves[i,0] = -1; moves[i,1] = -1;
+        }
+        // Simple Step Foward
+        if (numberInBoard(1 + y, 0 + x)) {
+          if (board[1 + y, 0 + x] == "") {
+            moves[0,0] = 0 + x; moves[0,1] = 1 + y;
+          }
+        }
+        // Sided Step IF White Piece
+        if (numberInBoard(1 + y, 1 + x)) {
+          if (isWhite(board[1 + y, 1 + x]) == "true") {
+            moves[1,0] = 1 + x; moves[1,1] = 1 + y;
+          }
+        }
+        if (numberInBoard(1 + y, -1 + x)) {
+          if (isWhite(board[1 + y, -1 + x]) == "true") {
+            moves[2,0] = -1 + x; moves[2,1] = 1 + y;
+          }
+        }
+        // Doble Step IF Inicial Position
+        if (y == 1) {
+          moves[3,0] = 0 + x; moves[3,1] = 2 + y;
+        }
+      }
+
+      if (piece == "♟") {
+        moves = new int[4,2];
+        // Set Position of All Movents to -1. -1
+        for (var i = 0; i < moves.GetLength(0); i++) {
+          moves[i,0] = -1; moves[i,1] = -1;
+        }
+        // Simple Step Foward
+        if (numberInBoard(-1 + y, 0 + x)) {
+          if (board[-1 + y, 0 + x] == "") {
+            moves[0,0] = 0 + x; moves[0,1] = -1 + y;
+          }
+        }
+        // Sided Step IF Black Piece
+        if (numberInBoard(-1 + y, 1 + x)) {
+          if (isWhite(board[-1 + y, 1 + x]) == "false") {
+            moves[1,0] = 1 + x; moves[1,1] = -1 + y;
+          }
+        }
+        if (numberInBoard(-1 + y, -1 + x)) {
+          if (isWhite(board[-1 + y, -1 + x]) == "false") {
+            moves[2,0] = -1 + x; moves[2,1] = -1 + y;
+          }
+        }
+        // Doble Step IF Inicial Position
+        if (y == 6) {
+          moves[3,0] = 0 + x; moves[3,1] = -2 + y;
+        }
+      }
+
+      if (piece == "♜" || piece == "♖") {
+        moves = new int[16,2];
+        // Set Position of All Movents to -1. -1
         for (var i = 0; i < moves.GetLength(0); i++) {
           moves[i,0] = -1; moves[i,1] = -1;
         }
 
-        moves[0,0] = 0 + x; moves[0,1] = 1 + y;
-        if (isWhite(board[1 + y, 1 + x])) {
-          moves[1,0] = 1 + x; moves[1,1] = 1 + y;
+        // Make Moves in X Axis
+        // Make Moves From the Piece to the Top
+        for (var i = x; i >= 0; i--) {
+          if (i == x) continue;
+          if (isWhite(board[y, i]) == isWhite(piece)) {
+            break;
+          } else {
+            if (isWhite(board[y, i]) != isWhite(piece)
+                && isWhite(board[y, i]) != "NaN") {
+              moves[i,0] = i; moves[i,1] = y;
+              break;
+            }
+            moves[i,0] = i; moves[i,1] = y;
+          }
         }
-        if (isWhite(board[1 + y, -1 + x])) {
-          moves[2,0] = -1 + x; moves[2,1] = 1 + y;
+        // Make Moves From the Piece to the Bottom
+        for (var i = x; i < 8; i++) {
+          if (i == x) continue;
+          if (isWhite(board[y, i]) == isWhite(piece)) {
+            break;
+          } else {
+            if (isWhite(board[y, i]) != isWhite(piece)
+                && isWhite(board[y, i]) != "NaN") {
+              moves[i,0] = i; moves[i,1] = y;
+              break;
+            }
+            moves[i,0] = i; moves[i,1] = y;
+          }
         }
-        if (y == 1) {
-          moves[3,0] = 0 + x; moves[3,1] = 2 + y;
+
+        // Make Moves in Y Axis
+        // Make Moves From the Piece to the Left
+        for (var i = y; i >= 0; i--) {
+          if (i == y) continue;
+          if (isWhite(board[i, x]) == isWhite(piece)) {
+            break;
+          } else {
+            if (isWhite(board[i, x]) != isWhite(piece)
+                && isWhite(board[i, x]) != "NaN") {
+              moves[i+8,0] = x; moves[i+8,1] = i;
+              break;
+            }
+            moves[i+8,0] = x; moves[i+8,1] = i;
+          }
+        }
+        // Make Moves From the Piece to the Rigth
+        for (var i = y; i < 8; i++) {
+          if (i == y) continue;
+          if (isWhite(board[i, x]) == isWhite(piece)) {
+            break;
+          } else {
+            if (isWhite(board[i, x]) != isWhite(piece)
+                && isWhite(board[i, x]) != "NaN") {
+              moves[i+8,0] = x; moves[i+8,1] = i;
+              break;
+            }
+            moves[i+8,0] = x; moves[i+8,1] = i;
+          }
         }
 
       }
+
       return moves;
     }
 
@@ -85,6 +208,7 @@ namespace ChessGame {
         Console.ResetColor();
         Console.SetCursorPosition(cursor[0] * 2, cursor[1]);
 
+        // Set Posible Movements
         int[] piecePos = {cursor[0], cursor[1]};
         var piece = getPiece(piecePos[0], piecePos[1]);
         int[,] posibleMoves = getPosibleMoves(piece, piecePos[0], piecePos[1]);
@@ -92,6 +216,10 @@ namespace ChessGame {
         bool doBreak = false;
         do {
           keyPress = Console.ReadKey(true);
+
+          // Prevent Pick Piece of Other Player
+          if (isWhite(piece) == "true" && turn) doBreak = true;
+          if (isWhite(piece) == "false" && !turn) doBreak = true;
 
           // Input Definition to Move Cursor
           if (keyPress.Key == ConsoleKey.UpArrow)
@@ -103,14 +231,24 @@ namespace ChessGame {
           if (keyPress.Key == ConsoleKey.RightArrow)
             moveCursor(0, 1);
 
+          // Place New Position of Piece
           if (keyPress.Key == ConsoleKey.Spacebar) {
+            // Check All Posible Moves Concurrences
             for (var i = 0; i < posibleMoves.GetLength(0); i++) {
+              if (numberInBoard(posibleMoves[i, 0], posibleMoves[i, 1])) {
+                Console.SetCursorPosition(posibleMoves[i, 0] * 2, posibleMoves[i, 1]);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("✓");
+                Console.ResetColor();
+                System.Threading.Thread.Sleep(50);
+              }
+              // Do Movement
               if (posibleMoves[i, 0] == cursor[0] && posibleMoves[i, 1] == cursor[1]) {
                 board[piecePos[1], piecePos[0]] = "";
                 board[posibleMoves[i, 1], posibleMoves[i, 0]] = piece;
+                turn = !turn;
                 doBreak = true;
-              }
-            }
+            }}
           }
 
         } while (keyPress.Key != ConsoleKey.Spacebar && !doBreak);
