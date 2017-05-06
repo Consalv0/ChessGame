@@ -1,8 +1,0 @@
-C:\Users\SAE INSTITUTE MEXICO\Downloads\ChessGame\bin\BWS\Debug\netcoreapp1.1\ChessGame.deps.json
-C:\Users\SAE INSTITUTE MEXICO\Downloads\ChessGame\bin\BWS\Debug\netcoreapp1.1\ChessGame.runtimeconfig.json
-C:\Users\SAE INSTITUTE MEXICO\Downloads\ChessGame\bin\BWS\Debug\netcoreapp1.1\ChessGame.runtimeconfig.dev.json
-C:\Users\SAE INSTITUTE MEXICO\Downloads\ChessGame\bin\BWS\Debug\netcoreapp1.1\ChessGame.dll
-C:\Users\SAE INSTITUTE MEXICO\Downloads\ChessGame\bin\BWS\Debug\netcoreapp1.1\ChessGame.pdb
-C:\Users\SAE INSTITUTE MEXICO\Downloads\ChessGame\obj\BWS\Debug\netcoreapp1.1\ChessGame.AssemblyInfo.cs
-C:\Users\SAE INSTITUTE MEXICO\Downloads\ChessGame\obj\BWS\Debug\netcoreapp1.1\ChessGame.dll
-C:\Users\SAE INSTITUTE MEXICO\Downloads\ChessGame\obj\BWS\Debug\netcoreapp1.1\ChessGame.pdb

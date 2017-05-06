@@ -7,7 +7,7 @@
   "dependencies": {
   },
   "scripts": {
-    "start": "dotnet run /MineField.cs",
-    "mono": "mcs MineField.cs && mono MineField.exe"
+    "start": "dotnet run",
+    "mono": "mcs ChessGame.cs && mono ChessGame.exe"
   }
 }
