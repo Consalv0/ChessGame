@@ -25,7 +25,7 @@ namespace ChessGame {
       printBoard();
       cursorListening();
 
-      // To Display Console Text Correctly
+      // To Display Console Text Correctly.
       Console.SetCursorPosition(0, Console.WindowHeight - 1);
     }
 
@@ -46,7 +46,7 @@ namespace ChessGame {
 
         do {
           keyPress = Console.ReadKey(true);
-          getPiece(cursor[0], cursor[1]);
+          var piece = getPiece(cursor[0], cursor[1]);
 
           if (keyPress.Key == ConsoleKey.DownArrow) {
 
@@ -54,6 +54,7 @@ namespace ChessGame {
 
         } while (keyPress.Key != ConsoleKey.Spacebar);
       }
+
       Console.SetCursorPosition(0, 0);
       printBoard();
       Console.SetCursorPosition(cursor[0] * 2, cursor[1]);
@@ -97,27 +98,21 @@ namespace ChessGame {
       do {
         keyPress = Console.ReadKey(true);
 
-        // Input Definition
-        if(keyPress.Key == ConsoleKey.UpArrow) {
+        // Input Definition to Move Cursor
+        if(keyPress.Key == ConsoleKey.UpArrow)
           moveCursor(-1, 0);
-        }
-        if(keyPress.Key == ConsoleKey.DownArrow) {
+        if(keyPress.Key == ConsoleKey.DownArrow)
           moveCursor(1, 0);
-        }
-        if(keyPress.Key == ConsoleKey.LeftArrow) {
+        if(keyPress.Key == ConsoleKey.LeftArrow)
           moveCursor(0, -1);
-        }
-        if(keyPress.Key == ConsoleKey.RightArrow) {
+        if(keyPress.Key == ConsoleKey.RightArrow)
           moveCursor(0, 1);
-        }
 
+        // Input Definition to Pick Piece
         if(keyPress.Key == ConsoleKey.Spacebar) {
           grabPiece();
         }
 
-        if(keyPress.Key == ConsoleKey.F) {
-
-        }
       } while (keyPress.Key != ConsoleKey.Escape);
 
     }
