@@ -29,9 +29,50 @@ namespace ChessGame {
       Console.SetCursorPosition(0, Console.WindowHeight - 1);
     }
 
+    public static bool isWhite(string piece) {
+      if (piece == "♙") return false;
+      if (piece == "♖") return false;
+      if (piece == "♘") return false;
+      if (piece == "♗") return false;
+      if (piece == "♕") return false;
+      if (piece == "♔") return false;
+
+      if (piece == "♟") return true;
+      if (piece == "♜") return true;
+      if (piece == "♞") return true;
+      if (piece == "♝") return true;
+      if (piece == "♛") return true;
+      if (piece == "♚") return true;
+
+      return false;
+    }
+
     // Obtain Piece String From X and Y in Matrix
     public static string getPiece(int x, int y) {
       return board[y, x];
+    }
+
+    public static int[,] getPosibleMoves(string piece, int x, int y) {
+      int[,] moves = new int[1,1];
+      if (piece == "♙") {
+        moves = new int[4,2];
+        for (var i = 0; i < moves.GetLength(0); i++) {
+          moves[i,0] = -1; moves[i,1] = -1;
+        }
+
+        moves[0,0] = 0 + x; moves[0,1] = 1 + y;
+        if (isWhite(board[1 + y, 1 + x])) {
+          moves[1,0] = 1 + x; moves[1,1] = 1 + y;
+        }
+        if (isWhite(board[1 + y, -1 + x])) {
+          moves[2,0] = -1 + x; moves[2,1] = 1 + y;
+        }
+        if (y == 1) {
+          moves[3,0] = 0 + x; moves[3,1] = 2 + y;
+        }
+
+      }
+      return moves;
     }
 
     // Pick A Piece and Do Movements
@@ -44,15 +85,35 @@ namespace ChessGame {
         Console.ResetColor();
         Console.SetCursorPosition(cursor[0] * 2, cursor[1]);
 
+        int[] piecePos = {cursor[0], cursor[1]};
+        var piece = getPiece(piecePos[0], piecePos[1]);
+        int[,] posibleMoves = getPosibleMoves(piece, piecePos[0], piecePos[1]);
+
+        bool doBreak = false;
         do {
           keyPress = Console.ReadKey(true);
-          var piece = getPiece(cursor[0], cursor[1]);
 
-          if (keyPress.Key == ConsoleKey.DownArrow) {
+          // Input Definition to Move Cursor
+          if (keyPress.Key == ConsoleKey.UpArrow)
+            moveCursor(-1, 0);
+          if (keyPress.Key == ConsoleKey.DownArrow)
+            moveCursor(1, 0);
+          if (keyPress.Key == ConsoleKey.LeftArrow)
+            moveCursor(0, -1);
+          if (keyPress.Key == ConsoleKey.RightArrow)
+            moveCursor(0, 1);
 
+          if (keyPress.Key == ConsoleKey.Spacebar) {
+            for (var i = 0; i < posibleMoves.GetLength(0); i++) {
+              if (posibleMoves[i, 0] == cursor[0] && posibleMoves[i, 1] == cursor[1]) {
+                board[piecePos[1], piecePos[0]] = "";
+                board[posibleMoves[i, 1], posibleMoves[i, 0]] = piece;
+                doBreak = true;
+              }
+            }
           }
 
-        } while (keyPress.Key != ConsoleKey.Spacebar);
+        } while (keyPress.Key != ConsoleKey.Spacebar && !doBreak);
       }
 
       Console.SetCursorPosition(0, 0);
@@ -99,13 +160,13 @@ namespace ChessGame {
         keyPress = Console.ReadKey(true);
 
         // Input Definition to Move Cursor
-        if(keyPress.Key == ConsoleKey.UpArrow)
+        if (keyPress.Key == ConsoleKey.UpArrow)
           moveCursor(-1, 0);
-        if(keyPress.Key == ConsoleKey.DownArrow)
+        if (keyPress.Key == ConsoleKey.DownArrow)
           moveCursor(1, 0);
-        if(keyPress.Key == ConsoleKey.LeftArrow)
+        if (keyPress.Key == ConsoleKey.LeftArrow)
           moveCursor(0, -1);
-        if(keyPress.Key == ConsoleKey.RightArrow)
+        if (keyPress.Key == ConsoleKey.RightArrow)
           moveCursor(0, 1);
 
         // Input Definition to Pick Piece
