@@ -695,7 +695,7 @@ namespace ChessGame {
       do {
         keyPress = Console.ReadKey(true);
 
-        // Input Definition to Move Cursor
+        // Restart Game?
         if (keyPress.Key == ConsoleKey.Y) {
           board = new string[8,8];
           whitePieces = new string[16];
@@ -706,17 +706,13 @@ namespace ChessGame {
           blackCaptured = 0;
           gameIsOver = false;
 
+          Console.Clear();
+
           setPieces();
           placePieces();
           printBoard();
           cursorListening();
         }
-
-        // Input Definition to Pick Piece
-        if(keyPress.Key == ConsoleKey.Spacebar) {
-          grabPiece();
-        }
-
       } while (keyPress.Key != ConsoleKey.Escape && keyPress.Key != ConsoleKey.N);
     }
   }
