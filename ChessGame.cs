@@ -13,6 +13,9 @@ namespace ChessGame {
     public static string[] blackPieces = new string[16];
     public static int[] cursor = new int[2];
     public static bool turn = false;
+    public static int whiteCaptured = 0;
+    public static int blackCaptured = 0;
+    public static bool gameIsOver = false;
 
     // Main Structure
     static void Main(string[] args) {
@@ -505,6 +508,7 @@ namespace ChessGame {
           if (keyPress.Key == ConsoleKey.Spacebar) {
             // Check All Posible Moves Concurrences
             for (var i = 0; i < posibleMoves.GetLength(0); i++) {
+              // Display All Posible Movements
               if (numberInBoard(posibleMoves[i, 0], posibleMoves[i, 1])) {
                 Console.SetCursorPosition(posibleMoves[i, 0] * 2, posibleMoves[i, 1]);
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -512,9 +516,28 @@ namespace ChessGame {
                 Console.ResetColor();
                 System.Threading.Thread.Sleep(50);
               }
-              // Do Movement
+              // Movement Is Possible
               if (posibleMoves[i, 0] == cursor[0] && posibleMoves[i, 1] == cursor[1]) {
                 board[piecePos[1], piecePos[0]] = "";
+                // Movement IS Capturing Piece
+                if (board[posibleMoves[i, 1], posibleMoves[i, 0]] != "") {
+                  // Check Game Over
+                  if (board[posibleMoves[i, 1], posibleMoves[i, 0]] == "♚") {
+                    gameOver("white");
+                  }
+                  if (board[posibleMoves[i, 1], posibleMoves[i, 0]] == "♔") {
+                    gameOver("black");
+                  }
+                  // Display Captured Pieces
+                  if (isWhite(board[posibleMoves[i, 1], posibleMoves[i, 0]]) == "true") {
+                    Console.SetCursorPosition(8 * 2 + whiteCaptured, 0);
+                    whiteCaptured++;
+                  } else {
+                    Console.SetCursorPosition(8 * 2 + blackCaptured, 7);
+                    blackCaptured++;
+                  }
+                  Console.Write(board[posibleMoves[i, 1], posibleMoves[i, 0]]);
+                }
                 board[posibleMoves[i, 1], posibleMoves[i, 0]] = piece;
                 turn = !turn;
                 doBreak = true;
@@ -582,7 +605,7 @@ namespace ChessGame {
           grabPiece();
         }
 
-      } while (keyPress.Key != ConsoleKey.Escape);
+      } while (keyPress.Key != ConsoleKey.Escape && !gameIsOver);
     }
 
     // Set First Position in Board
@@ -646,9 +669,9 @@ namespace ChessGame {
         for (var j = 0; j < board.GetLength(1); j++) {
           // Set Black and White Grid When There's NO Pieces
           if (placeBlack && board[i, j] == "") {
-            Console.Write("□ ");
+            Console.Write("  ");
           } else if (board[i, j] == "") {
-            Console.Write("■ ");
+            Console.Write("◆ ");
           } else {
             Console.Write(board[i, j] + " ");
           }
@@ -657,6 +680,44 @@ namespace ChessGame {
         placeBlack = !placeBlack;
         Console.WriteLine();
       }
+    }
+
+    public static void gameOver(string playerColor) {
+      Console.SetCursorPosition(0, Console.WindowHeight - 1);
+      if (playerColor == "white") {
+        Console.WriteLine("White WINS");
+      } else {
+        Console.WriteLine("Black WINS");
+      }
+      gameIsOver = true;
+
+      Console.WriteLine("Restart Game Y/N");
+      do {
+        keyPress = Console.ReadKey(true);
+
+        // Input Definition to Move Cursor
+        if (keyPress.Key == ConsoleKey.Y) {
+          board = new string[8,8];
+          whitePieces = new string[16];
+          blackPieces = new string[16];
+          cursor = new int[2];
+          turn = false;
+          whiteCaptured = 0;
+          blackCaptured = 0;
+          gameIsOver = false;
+
+          setPieces();
+          placePieces();
+          printBoard();
+          cursorListening();
+        }
+
+        // Input Definition to Pick Piece
+        if(keyPress.Key == ConsoleKey.Spacebar) {
+          grabPiece();
+        }
+
+      } while (keyPress.Key != ConsoleKey.Escape && keyPress.Key != ConsoleKey.N);
     }
   }
 }

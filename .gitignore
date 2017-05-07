@@ -3,3 +3,4 @@ obj
 *.csproj
 project.json
 project.*.json
+.log
