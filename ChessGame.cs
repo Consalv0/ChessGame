@@ -97,6 +97,7 @@ namespace ChessGame {
         }
       }
 
+      // Movements for White Pawn
       if (piece == "♟") {
         moves = new int[4,2];
         // Set Position of All Movents to -1. -1
@@ -126,6 +127,7 @@ namespace ChessGame {
         }
       }
 
+      // Movements for Rook
       if (piece == "♜" || piece == "♖") {
         moves = new int[16,2];
         // Set Position of All Movents to -1. -1
@@ -193,6 +195,57 @@ namespace ChessGame {
           }
         }
 
+      }
+
+      // Movements for Knight
+      if (piece == "♞" || piece == "♘") {
+        moves = new int[8,2];
+        // Set Position of All Movents to -1. -1
+        for (var i = 0; i < moves.GetLength(0); i++) {
+          moves[i,0] = -1; moves[i,1] = -1;
+        }
+
+        // Set Posible Positions
+        if (numberInBoard(-2 + y, 1 + x)) {
+          if (isWhite(board[-2 + y, 1 + x]) != isWhite(piece)) {
+            moves[0,0] = 1 + x; moves[0,1] = -2 + y;
+          }
+        }
+        if (numberInBoard(2 + y, 1 + x)) {
+          if (isWhite(board[2 + y, 1 + x]) != isWhite(piece)) {
+            moves[1,0] = 1 + x; moves[1,1] = 2 + y;
+          }
+        }
+        if (numberInBoard(-2 + y, -1 + x)) {
+          if (isWhite(board[-2 + y, -1 + x]) != isWhite(piece)) {
+            moves[2,0] = -1 + x; moves[2,1] = -2 + y;
+          }
+        }
+        if (numberInBoard(2 + y, -1 + x)) {
+          if (isWhite(board[2 + y, -1 + x]) != isWhite(piece)) {
+            moves[3,0] = -1 + x; moves[3,1] = 2 + y;
+          }
+        }
+        if (numberInBoard(1 + y, -2 + x)) {
+          if (isWhite(board[1 + y, -2 + x]) != isWhite(piece)) {
+            moves[4,0] = -2 + x; moves[4,1] = 1 + y;
+          }
+        }
+        if (numberInBoard(1 + y, 2 + x)) {
+          if (isWhite(board[1 + y, 2 + x]) != isWhite(piece)) {
+            moves[5,0] = 2 + x; moves[5,1] = 1 + y;
+          }
+        }
+        if (numberInBoard(-1 + y, -2 + x)) {
+          if (isWhite(board[-1 + y, -2 + x]) != isWhite(piece)) {
+            moves[6,0] = -2 + x; moves[6,1] = -1 + y;
+          }
+        }
+        if (numberInBoard(-1 + y, 2 + x)) {
+          if (isWhite(board[-1 + y, 2 + x]) != isWhite(piece)) {
+            moves[7,0] = 2 + x; moves[7,1] = -1 + y;
+          }
+        }
       }
 
       return moves;
