@@ -26,7 +26,7 @@ namespace ChessGame {
       printBoard();
       cursorListening();
 
-      // To Display Console Text Correctly.
+      // To Display Console Text Correctly At the End of Program.
       Console.SetCursorPosition(0, Console.WindowHeight - 1);
     }
 
@@ -194,7 +194,6 @@ namespace ChessGame {
             moves[i+8,0] = x; moves[i+8,1] = i;
           }
         }
-
       }
 
       // Movements for Knight
@@ -318,7 +317,7 @@ namespace ChessGame {
         }
       }
 
-      // Movements for Bishop
+      // Movements for Queen
       if (piece == "♛" || piece == "♕") {
         moves = new int[48,2];
         // Set Position of All Movents to -1. -1
@@ -387,66 +386,84 @@ namespace ChessGame {
           }
         }
 
-      // Make Moves in X Axis
-      // Make Moves From the Piece to the Top
-      for (var i = x; i >= 0; i--) {
-        if (i == x) continue;
-        if (isWhite(board[y, i]) == isWhite(piece)) {
-          break;
-        } else {
-          if (isWhite(board[y, i]) != isWhite(piece)
-              && isWhite(board[y, i]) != "NaN") {
-            moves[i+32,0] = i; moves[i+32,1] = y;
+        // Make Moves in X Axis
+        // Make Moves From the Piece to the Top
+        for (var i = x; i >= 0; i--) {
+          if (i == x) continue;
+          if (isWhite(board[y, i]) == isWhite(piece)) {
             break;
+          } else {
+            if (isWhite(board[y, i]) != isWhite(piece)
+                && isWhite(board[y, i]) != "NaN") {
+              moves[i+32,0] = i; moves[i+32,1] = y;
+              break;
+            }
+            moves[i+32,0] = i; moves[i+32,1] = y;
           }
-          moves[i+32,0] = i; moves[i+32,1] = y;
         }
-      }
-      // Make Moves From the Piece to the Bottom
-      for (var i = x; i < 8; i++) {
-        if (i == x) continue;
-        if (isWhite(board[y, i]) == isWhite(piece)) {
-          break;
-        } else {
-          if (isWhite(board[y, i]) != isWhite(piece)
-              && isWhite(board[y, i]) != "NaN") {
-            moves[i+32,0] = i; moves[i+32,1] = y;
+        // Make Moves From the Piece to the Bottom
+        for (var i = x; i < 8; i++) {
+          if (i == x) continue;
+          if (isWhite(board[y, i]) == isWhite(piece)) {
             break;
+          } else {
+            if (isWhite(board[y, i]) != isWhite(piece)
+                && isWhite(board[y, i]) != "NaN") {
+              moves[i+32,0] = i; moves[i+32,1] = y;
+              break;
+            }
+            moves[i+32,0] = i; moves[i+32,1] = y;
           }
-          moves[i+32,0] = i; moves[i+32,1] = y;
+        }
+
+        // Make Moves in Y Axis
+        // Make Moves From the Piece to the Left
+        for (var i = y; i >= 0; i--) {
+          if (i == y) continue;
+          if (isWhite(board[i, x]) == isWhite(piece)) {
+            break;
+          } else {
+            if (isWhite(board[i, x]) != isWhite(piece)
+                && isWhite(board[i, x]) != "NaN") {
+              moves[i+40,0] = x; moves[i+40,1] = i;
+              break;
+            }
+            moves[i+40,0] = x; moves[i+40,1] = i;
+          }
+        }
+        // Make Moves From the Piece to the Rigth
+        for (var i = y; i < 8; i++) {
+          if (i == y) continue;
+          if (isWhite(board[i, x]) == isWhite(piece)) {
+            break;
+          } else {
+            if (isWhite(board[i, x]) != isWhite(piece)
+                && isWhite(board[i, x]) != "NaN") {
+              moves[i+40,0] = x; moves[i+40,1] = i;
+              break;
+            }
+            moves[i+40,0] = x; moves[i+40,1] = i;
+          }
         }
       }
 
-      // Make Moves in Y Axis
-      // Make Moves From the Piece to the Left
-      for (var i = y; i >= 0; i--) {
-        if (i == y) continue;
-        if (isWhite(board[i, x]) == isWhite(piece)) {
-          break;
-        } else {
-          if (isWhite(board[i, x]) != isWhite(piece)
-              && isWhite(board[i, x]) != "NaN") {
-            moves[i+40,0] = x; moves[i+40,1] = i;
-            break;
-          }
-          moves[i+40,0] = x; moves[i+40,1] = i;
+      // Movements for King
+      if (piece == "♚" || piece == "♔") {
+        moves = new int[12,2];
+        // Set Position of All Movents to -1. -1
+        for (var i = 0; i < moves.GetLength(0); i++) {
+          moves[i,0] = -1; moves[i,1] = -1;
         }
+
+        for (var i = -1; i < 2; i++) {
+          for (var j = -1; j < 2; j++) {
+            if (numberInBoard(i + y, j + x)) {
+              if (isWhite(board[i + y, j + x]) != isWhite(piece)) {
+                moves[(i+1)*3 + j+1,0] = j + x;
+                moves[(i+1)*3 + j+1,1] = i + y;
+            } }
+        } }
       }
-      // Make Moves From the Piece to the Rigth
-      for (var i = y; i < 8; i++) {
-        if (i == y) continue;
-        if (isWhite(board[i, x]) == isWhite(piece)) {
-          break;
-        } else {
-          if (isWhite(board[i, x]) != isWhite(piece)
-              && isWhite(board[i, x]) != "NaN") {
-            moves[i+40,0] = x; moves[i+40,1] = i;
-            break;
-          }
-          moves[i+40,0] = x; moves[i+40,1] = i;
-        }
-      }
-    }
 
       return moves;
     }
@@ -501,7 +518,7 @@ namespace ChessGame {
                 board[posibleMoves[i, 1], posibleMoves[i, 0]] = piece;
                 turn = !turn;
                 doBreak = true;
-            }}
+            } }
           }
 
         } while (keyPress.Key != ConsoleKey.Spacebar && !doBreak);
@@ -566,7 +583,6 @@ namespace ChessGame {
         }
 
       } while (keyPress.Key != ConsoleKey.Escape);
-
     }
 
     // Set First Position in Board
@@ -575,7 +591,7 @@ namespace ChessGame {
       for (var i = 0; i < board.GetLength(0); i++) {
         for (var j = 0; j < board.GetLength(1); j++) {
           board[i, j] = "";
-      }}
+      } }
 
       // Place Pieces
       for (var i = 0; i < board.GetLength(0); i++) {
@@ -584,7 +600,7 @@ namespace ChessGame {
           if (i == 0) board[i, j] = whitePieces[j + 8];
           if (i == 6) board[i, j] = blackPieces[j];
           if (i == 7) board[i, j] = blackPieces[j + 8];
-      }}
+      } }
     }
 
     // Define Pieces in Correct Position for Easly Place in Board
