@@ -248,6 +248,76 @@ namespace ChessGame {
         }
       }
 
+      // Movements for Bishop
+      if (piece == "♝" || piece == "♗") {
+        moves = new int[32,2];
+        // Set Position of All Movents to -1. -1
+        for (var i = 0; i < moves.GetLength(0); i++) {
+          moves[i,0] = -1; moves[i,1] = -1;
+        }
+
+        // Make Moves From the Piece to the Negative Bottom
+        for (var i = x; i >= 0; i--) {
+          if (i == x) continue;
+          if (!numberInBoard(i, x - i + y)) continue;
+          if (isWhite(board[x - i + y, i]) == isWhite(piece)) {
+            break;
+          } else {
+            if (isWhite(board[x - i + y, i]) != isWhite(piece)
+                && isWhite(board[x - i + y, i]) != "NaN") {
+              moves[i,0] = i; moves[i,1] = x - i + y;
+              break;
+            }
+            moves[i,0] = i; moves[i,1] = x - i + y;
+          }
+        }
+        // Make Moves From the Piece to the Positive Bottom
+        for (var i = y; i >= 0; i--) {
+          if (i == y) continue;
+          if (!numberInBoard(y - i + x, i)) continue;
+          if (isWhite(board[i, y - i + x]) == isWhite(piece)) {
+            break;
+          } else {
+            if (isWhite(board[i, y - i + x]) != isWhite(piece)
+                && isWhite(board[i, y - i + x]) != "NaN") {
+              moves[i+16,0] = y - i + x; moves[i+16,1] = i;
+              break;
+            }
+            moves[i+16,0] = y - i + x; moves[i+16,1] = i;
+          }
+        }
+        // Make Moves From the Piece to the Positive Top
+        for (var i = x; i < 8; i++) {
+          if (i == x) continue;
+          if (!numberInBoard(i, i - x + y)) continue;
+          if (isWhite(board[i - x + y, i]) == isWhite(piece)) {
+            break;
+          } else {
+            if (isWhite(board[i - x + y, i]) != isWhite(piece)
+                && isWhite(board[i - x + y, i]) != "NaN") {
+              moves[i+8,0] = i; moves[i+8,1] = i - x + y;
+              break;
+            }
+            moves[i+8,0] = i; moves[i+8,1] = i - x + y;
+          }
+        }
+        // Make Moves From the Piece to the Negative Top
+        for (var i = x; i >= 0; i--) {
+          if (i == x) continue;
+          if (!numberInBoard(i, i - x + y)) continue;
+          if (isWhite(board[i - x + y, i]) == isWhite(piece)) {
+            break;
+          } else {
+            if (isWhite(board[i - x + y, i]) != isWhite(piece)
+                && isWhite(board[i - x + y, i]) != "NaN") {
+              moves[i+24,0] = i; moves[i+24,1] = i - x + y;
+              break;
+            }
+            moves[i+24,0] = i; moves[i+24,1] = i - x + y;
+          }
+        }
+      }
+
       return moves;
     }
 
