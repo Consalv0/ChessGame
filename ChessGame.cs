@@ -62,6 +62,68 @@ namespace ChessGame {
       return "NaN";
     }
 
+    public static string selectPiece(string color) {
+      string[] WhitePieces = {"♜", "♞", "♝", "♛"};
+      string[] BlackPieces = {"♖", "♘", "♗", "♕"};
+      int selection = 0;
+
+      if (cursor[0] != 0) {
+        Console.SetCursorPosition(cursor[0] *2 -1, cursor[1]);
+        Console.Write("<");
+      }
+      Console.SetCursorPosition(cursor[0] *2 +1, cursor[1]);
+      Console.Write(">");
+
+      if (color == "white") {
+        Console.SetCursorPosition(cursor[0] *2, cursor[1]);
+        Console.Write(WhitePieces[selection]);
+      }
+      if (color == "black") {
+        Console.SetCursorPosition(cursor[0] *2, cursor[1]);
+        Console.Write(BlackPieces[selection]);
+      }
+
+      do {
+        keyPress = Console.ReadKey(true);
+
+        // Move Selection
+        if (keyPress.Key == ConsoleKey.LeftArrow) {
+          selection = selection -1 < 0 ? 0 : selection -1;
+          if (color == "white") {
+            Console.SetCursorPosition(cursor[0] *2, cursor[1]);
+            Console.Write(WhitePieces[selection]);
+          }
+          if (color == "black") {
+            Console.SetCursorPosition(cursor[0] *2, cursor[1]);
+            Console.Write(BlackPieces[selection]);
+          }
+        }
+        if (keyPress.Key == ConsoleKey.RightArrow) {
+          selection = selection +1 > 3 ? selection : selection +1;
+          if (color == "white") {
+            Console.SetCursorPosition(cursor[0] *2, cursor[1]);
+            Console.Write(WhitePieces[selection]);
+          }
+          if (color == "black") {
+            Console.SetCursorPosition(cursor[0] *2, cursor[1]);
+            Console.Write(BlackPieces[selection]);
+          }
+        }
+
+        // Return Color Piece
+        if(keyPress.Key == ConsoleKey.Spacebar) {
+          if (color == "white") {
+            return WhitePieces[selection];
+          }
+          if (color == "black") {
+            return BlackPieces[selection];
+          }
+        }
+
+      } while (keyPress.Key != ConsoleKey.Spacebar && !gameIsOver);
+      return WhitePieces[0];
+    }
+
     // Obtain Piece String From X and Y in Matrix
     public static string getPiece(int x, int y) {
       return board[y, x];
@@ -511,10 +573,8 @@ namespace ChessGame {
               // Display All Posible Movements
               if (numberInBoard(posibleMoves[i, 0], posibleMoves[i, 1])) {
                 Console.SetCursorPosition(posibleMoves[i, 0] * 2, posibleMoves[i, 1]);
-                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("✓");
-                Console.ResetColor();
-                System.Threading.Thread.Sleep(50);
+                System.Threading.Thread.Sleep(1);
               }
               // Movement Is Possible
               if (posibleMoves[i, 0] == cursor[0] && posibleMoves[i, 1] == cursor[1]) {
@@ -522,10 +582,10 @@ namespace ChessGame {
                 // Movement IS Capturing Piece
                 if (board[posibleMoves[i, 1], posibleMoves[i, 0]] != "") {
                   // Check Game Over
-                  if (board[posibleMoves[i, 1], posibleMoves[i, 0]] == "♚") {
+                  if (board[posibleMoves[i, 1], posibleMoves[i, 0]] == "♔") {
                     gameOver("white");
                   }
-                  if (board[posibleMoves[i, 1], posibleMoves[i, 0]] == "♔") {
+                  if (board[posibleMoves[i, 1], posibleMoves[i, 0]] == "♚") {
                     gameOver("black");
                   }
                   // Display Captured Pieces
@@ -538,6 +598,16 @@ namespace ChessGame {
                   }
                   Console.Write(board[posibleMoves[i, 1], posibleMoves[i, 0]]);
                 }
+
+                // Promote Pawn
+                if (piece == "♙" && cursor[1] == 7) {
+                  piece = selectPiece("black");
+                }
+                if (piece == "♟" && cursor[1] == 0) {
+                  piece = selectPiece("white");
+                }
+
+                // Place Piece and Pass Turn
                 board[posibleMoves[i, 1], posibleMoves[i, 0]] = piece;
                 turn = !turn;
                 doBreak = true;
@@ -669,9 +739,9 @@ namespace ChessGame {
         for (var j = 0; j < board.GetLength(1); j++) {
           // Set Black and White Grid When There's NO Pieces
           if (placeBlack && board[i, j] == "") {
-            Console.Write("  ");
+            Console.Write("⸰ ");
           } else if (board[i, j] == "") {
-            Console.Write("◆ ");
+            Console.Write("⦁ ");
           } else {
             Console.Write(board[i, j] + " ");
           }

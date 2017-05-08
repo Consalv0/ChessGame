@@ -1,9 +1,9 @@
 {
-  "name": "MineField",
-  "version": "1.0.0",
+  "name": "ChessGame",
+  "version": "1.1.0",
   "main": "Gruntfile.js",
   "license": "MIT",
-  "description": "A Minesweeper game",
+  "description": "A simple chess game",
   "dependencies": {
   },
   "scripts": {
